@@ -1,0 +1,67 @@
+Package: RNAseqV3
+Title: Shiny App for bulk RNAseq differential gene expression analysis and enrichment analysis
+Version: 3.0.0
+Date: 2026-06-01
+Authors@R: c(
+    person(given = "Hongjian",
+           family = "Jin",
+           role = c("aut", "cre"),
+           email = "hongjian.jin@stjude.org"),
+    person(given = "Surbhi",
+           family = "Sona",
+           role = c("aut"),
+           email = "surbhi.sona@stjude.org")
+ )
+Description: This interactive Shiny application is developed for bulk RNA-seq differential gene expression and gene set enrichment analysis with an option for using ERCC normalization
+Depends:
+       R (>= 4.1.0),
+       bslib,
+       data.table,
+       DESeq2,
+       dplyr,
+       DT,
+       edgeR,
+       enrichplot,
+       enrichR,
+       fgsea,
+       fontawesome,
+       fresh,
+       ggplot2,
+       ggpubr,
+       ggrepel,
+       ggtext,
+       grid,
+       gridExtra,
+       heatmaply,
+       htmltools,
+       knitr,
+       limma,
+       markdown,
+       msigdbr,
+       openxlsx,
+       optparse,
+       parallel,
+       patchwork,
+       plotly,
+       rlang,
+       reshape2,
+       rtracklayer,
+       Rsamtools,
+       RUVSeq,
+       scales,
+       shiny,
+       shinyalert,
+       shinycssloaders,
+       shinydashboard,
+       shinydashboardPlus,
+       shinydisconnect,
+       shinyjs,
+       shinyWidgets,
+       stringr,
+       tibble,
+       tidyverse,
+       zip
+License: GPL-3
+Encoding: UTF-8
+LazyData: TRUE
+RoxygenNote: 6.1.1

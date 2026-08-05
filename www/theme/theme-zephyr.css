@@ -1,0 +1,60 @@
+.content-wrapper, .right-side {
+  background-color: #f7f7f9;
+}
+
+.progress-bar,
+.shiny-notification .progress-bar,
+.shiny-progress .progress-bar {
+  background-color: #2fa4e7 !important;
+}
+
+.main-header .logo,
+.main-header .navbar {
+  background-color: #2fa4e7 !important;
+}
+
+.main-header .logo:hover,
+.main-header .navbar:hover {
+  background-color: #238acc !important;
+}
+
+.nav-tabs-custom > .nav-tabs > li.active {
+  border-top-color: #2fa4e7;
+}
+
+.btn-primary,
+.bg-light-blue,
+.label-primary,
+.modal-primary .modal-header {
+  background-color: #2fa4e7 !important;
+  border-color: #238acc !important;
+}
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus {
+  background-color: #238acc !important;
+  border-color: #1f78b4 !important;
+}
+
+.box.box-primary {
+  border-top-color: #2fa4e7;
+}
+
+.box.box-success {
+  border-top-color: #73a839;
+}
+
+.box.box-warning {
+  border-top-color: #dd5600;
+}
+
+.box.box-info {
+  border-top-color: #5bc0de;
+}
+
+.pagination > .active > a,
+.pagination > .active > span {
+  background-color: #2fa4e7 !important;
+  border-color: #238acc !important;
+}
