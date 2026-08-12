@@ -451,6 +451,9 @@ ERCC_QCServer <- function(id, tables) {
         format = "svg", filename = "QC_PCA_TMM", height = 500, width = 500, scale = 1
       ))
     })
+    # Compute even when the "PCA Plots" sub-tab is hidden, so the ERCC PCA is
+    # ready as soon as the user opens it (not deferred until Analyze runs).
+    try(outputOptions(output, "erccPCAplot_tmm", suspendWhenHidden = FALSE), silent = TRUE)
 
     # ---- PCA – ERCC normalization (all samples) --------------------------
     output$erccPCAplot_ercc <- renderPlotly({
@@ -466,6 +469,7 @@ ERCC_QCServer <- function(id, tables) {
         format = "svg", filename = "QC_PCA_ERCC", height = 500, width = 500, scale = 1
       ))
     })
+    try(outputOptions(output, "erccPCAplot_ercc", suspendWhenHidden = FALSE), silent = TRUE)
 
     # ---- 3. Spike-in level boxplot (pct_ERCC per group) -----------------
     output$spikeInBoxplot <- renderPlotly({

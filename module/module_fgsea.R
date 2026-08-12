@@ -1380,7 +1380,7 @@ mod_fgsea_server <- function(id, tables, run_fgsea) {
                 plot_out_dir,
                 paste0(
                   entry$rnk_label, "_",
-                  db_token, "_", pair$label, ".png"
+                  db_token, "_", pair$label, ".pdf"
                 )
               )
               plot_key <- paste0(key, "__", pair$suffix)

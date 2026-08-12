@@ -2085,6 +2085,8 @@ PlotMA <- function(diff_table, cutoff_logFC = 1, cols = NA, topnDEGs = NULL, GOI
   labelx <- "log2AveExpr"
   labely <- "log2FC"
   x_rng <- plotRange(dat1$x)
+  # Extra headroom on the right so GOI labels (nudge_x = 0.5) aren't clipped by plotly.
+  x_rng[2] <- x_rng[2] + max(0.5, diff(x_rng) * 0.05)
   y_rng <- plotRange(dat1$y, include = c(0, -cutoff_logFC, cutoff_logFC))
   myTitle <- paste0(Exp, " vs ", Ctl)
   pg <- ggplot(data = dat1, aes(x = x, y = y, text = paste(gene, "\nlog2AveExpr:", x, "\nlog2FC:", y, "\nP.Value:", pval, "\nFDR:", FDR))) +
@@ -2094,7 +2096,6 @@ PlotMA <- function(diff_table, cutoff_logFC = 1, cols = NA, topnDEGs = NULL, GOI
     theme(axis.text = element_text(size = 12)) +
     theme(panel.border = element_rect(colour = "grey20", fill = NA, size = 1)) +
     theme(plot.title = element_text(size = 8)) +
-    theme(aspect.ratio = 1) +
     labs(y = labely, x = labelx) +
     coord_cartesian(xlim = x_rng, ylim = y_rng, clip = "off") +
     ggtitle(myTitle)

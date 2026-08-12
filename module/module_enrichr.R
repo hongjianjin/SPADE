@@ -894,7 +894,7 @@ mod_enrichr_server <- function(id, tables) {
 
         out_file <- file.path(
           out_dir,
-          paste0(comp_stub, "_", db_stub, "_", plot_stub, "_", direction, ".png")
+          paste0(comp_stub, "_", db_stub, "_", plot_stub, "_", direction, ".pdf")
         )
         save_height <- max(5, compute_plot_height_px(plot_obj, max(top_up, top_down)) / 96)
         tryCatch(
