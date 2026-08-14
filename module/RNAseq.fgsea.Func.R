@@ -579,6 +579,7 @@ run_fgsea <- function(ranks = NULL,
 
     # Sanitize ranks: strip Ensembl version suffixes
     names(ranks) <- sub("[.][0-9]+$", "", names(ranks))
+    ranks <- ranks[!duplicated(names(ranks))]
 
     # Run fgsea analysis
     fgseaRes <- fgsea(fgsea_sets, stats = ranks, minSize = 15)

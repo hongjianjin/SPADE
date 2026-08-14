@@ -415,6 +415,22 @@ ERCC_QCServer <- function(id, tables) {
       ))
     })
 
+    # ---- TMM-normalized log2CPM reactive (independent of tables$norm.data) --
+    tmmNormLog2CPM <- reactive({
+      req(tables$counts, tables$meta_all)
+      counts <- as.data.frame(tables$counts)
+      if (ncol(counts) > 0 && tolower(colnames(counts)[1]) == "gene") counts <- counts[, -1, drop = FALSE]
+      meta <- tables$meta_all
+      common_ids <- intersect(meta$ID, colnames(counts))
+      req(length(common_ids) >= 2)
+      counts <- counts[, common_ids, drop = FALSE]
+      counts <- counts[, unlist(lapply(counts, is.numeric)), drop = FALSE]
+      req(ncol(counts) >= 2)
+      dge <- edgeR::DGEList(counts = counts)
+      dge <- edgeR::calcNormFactors(dge, method = "TMM")
+      edgeR::cpm(dge, log = TRUE)
+    })
+
     # ---- ERCC-normalized log2CPM reactive --------------------------------
     erccNormLog2CPM <- reactive({
       req(tables$counts, tables$counts_ERCC, tables$meta_all)
@@ -439,10 +455,10 @@ ERCC_QCServer <- function(id, tables) {
 
     # ---- PCA – TMM (all samples) -----------------------------------------
     output$erccPCAplot_tmm <- renderPlotly({
-      req(tables$norm.data, tables$meta_all, isTRUE(tables$inputValidated))
+      req(tmmNormLog2CPM(), tables$meta_all, isTRUE(tables$inputValidated))
       fig <- ggplotly(
         PCA2d(
-          dat = tables$norm.data, meta = tables$meta_all,
+          dat = tmmNormLog2CPM(), meta = tables$meta_all,
           scale = TRUE, topn = 3000, label = FALSE
         ),
         width = 500, height = 500, tooltip = "text"
