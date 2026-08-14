@@ -125,6 +125,22 @@ ERCC_QCServer <- function(id, tables) {
       tagList(
         choiceBox,
         fluidRow(
+          box(
+            width = 6, title = "PCA \u2014 TMM Normalization (All Samples)",
+            solidHeader = TRUE, collapsible = TRUE, status = "primary",
+            shinycssloaders::withSpinner(
+              plotlyOutput(ns("erccPCAplot_tmm"), height = "500px", width = "500px")
+            )
+          ),
+          box(
+            width = 6, title = "PCA \u2014 ERCC Normalization (All Samples)",
+            solidHeader = TRUE, collapsible = TRUE, status = "primary",
+            shinycssloaders::withSpinner(
+              plotlyOutput(ns("erccPCAplot_ercc"), height = "500px", width = "500px")
+            )
+          )
+        ),
+        fluidRow(
           tabBox(
             width = 12, id = ns("erccQcTabs"),
             title = NULL,
@@ -132,12 +148,12 @@ ERCC_QCServer <- function(id, tables) {
               tags$b("Library Stats"),
               fluidRow(
                 box(
-                  width = 6, title = "Library Size – TMM Normalization",
+                  width = 6, title = "Library Size \u2014 TMM Normalization",
                   solidHeader = TRUE, collapsible = TRUE, status = "primary",
                   plotlyOutput(ns("libSizeGeneNorm"), height = "550px")
                 ),
                 box(
-                  width = 6, title = "Library Size – ERCC Normalisation",
+                  width = 6, title = "Library Size \u2014 ERCC Normalisation",
                   solidHeader = TRUE, collapsible = TRUE, status = "primary",
                   plotlyOutput(ns("libSizeErccNorm"), height = "550px")
                 )
@@ -149,25 +165,6 @@ ERCC_QCServer <- function(id, tables) {
                   div(
                     plotlyOutput(ns("spikeInBoxplot"), height = "620px", width = spike_w_css),
                     align = "left"
-                  )
-                )
-              )
-            ),
-            tabPanel(
-              tags$b("PCA Plots"),
-              fluidRow(
-                box(
-                  width = 6, title = "PCA \u2014 TMM Normalization (All Samples)",
-                  solidHeader = TRUE, collapsible = TRUE, status = "primary",
-                  shinycssloaders::withSpinner(
-                    plotlyOutput(ns("erccPCAplot_tmm"), height = "500px", width = "500px")
-                  )
-                ),
-                box(
-                  width = 6, title = "PCA \u2014 ERCC Normalization (All Samples)",
-                  solidHeader = TRUE, collapsible = TRUE, status = "primary",
-                  shinycssloaders::withSpinner(
-                    plotlyOutput(ns("erccPCAplot_ercc"), height = "500px", width = "500px")
                   )
                 )
               )
@@ -467,9 +464,6 @@ ERCC_QCServer <- function(id, tables) {
         format = "svg", filename = "QC_PCA_TMM", height = 500, width = 500, scale = 1
       ))
     })
-    # Compute even when the "PCA Plots" sub-tab is hidden, so the ERCC PCA is
-    # ready as soon as the user opens it (not deferred until Analyze runs).
-    try(outputOptions(output, "erccPCAplot_tmm", suspendWhenHidden = FALSE), silent = TRUE)
 
     # ---- PCA – ERCC normalization (all samples) --------------------------
     output$erccPCAplot_ercc <- renderPlotly({
@@ -485,7 +479,6 @@ ERCC_QCServer <- function(id, tables) {
         format = "svg", filename = "QC_PCA_ERCC", height = 500, width = 500, scale = 1
       ))
     })
-    try(outputOptions(output, "erccPCAplot_ercc", suspendWhenHidden = FALSE), silent = TRUE)
 
     # ---- 3. Spike-in level boxplot (pct_ERCC per group) -----------------
     output$spikeInBoxplot <- renderPlotly({

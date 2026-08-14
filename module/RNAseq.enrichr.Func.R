@@ -257,11 +257,6 @@ run_enrichr <- function(deg, selected_dbs,
         res_up <- filter_enrichr_results_by_pvalue(enr_up[[db_name]],
           pval_cutoff = enrichment_pval_cutoff
         )
-        out_file_up <- file.path(out_dir, paste0(file_prefix, "_", file_stub, "_UP_enrichR.tsv"))
-        tryCatch(write.table(format_enrichr_table_for_save(res_up, enrichment_pval_cutoff),
-          file = out_file_up, sep = "\t",
-          row.names = FALSE, quote = FALSE
-        ), error = function(e) NULL)
       }
     }
 
@@ -272,11 +267,6 @@ run_enrichr <- function(deg, selected_dbs,
         res_down <- filter_enrichr_results_by_pvalue(enr_down[[db_name]],
           pval_cutoff = enrichment_pval_cutoff
         )
-        out_file_down <- file.path(out_dir, paste0(file_prefix, "_", file_stub, "_DOWN_enrichR.tsv"))
-        tryCatch(write.table(format_enrichr_table_for_save(res_down, enrichment_pval_cutoff),
-          file = out_file_down, sep = "\t",
-          row.names = FALSE, quote = FALSE
-        ), error = function(e) NULL)
       }
     }
 
@@ -302,7 +292,7 @@ run_enrichr <- function(deg, selected_dbs,
     has_down <- FALSE
     for (key in names(all_results)) {
       entry <- all_results[[key]]
-      sheet <- substr(gsub("[^[:alnum:]_]", "_", entry$db_name), 1, 31)
+      sheet <- substr(entry$db_name, 1, 31)
       if (!is.null(entry$up_result) && is.data.frame(entry$up_result) && nrow(entry$up_result) > 0) {
         openxlsx::addWorksheet(wb_up, sheet)
         openxlsx::writeData(wb_up, sheet, entry$up_result)
