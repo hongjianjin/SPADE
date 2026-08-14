@@ -292,7 +292,7 @@ run_enrichr <- function(deg, selected_dbs,
     has_down <- FALSE
     for (key in names(all_results)) {
       entry <- all_results[[key]]
-      sheet <- substr(entry$db_name, 1, 31)
+      sheet <- substr(gsub("[\\[\\]:*?/]", "_", entry$db_name), 1, 31)
       if (!is.null(entry$up_result) && is.data.frame(entry$up_result) && nrow(entry$up_result) > 0) {
         openxlsx::addWorksheet(wb_up, sheet)
         openxlsx::writeData(wb_up, sheet, entry$up_result)

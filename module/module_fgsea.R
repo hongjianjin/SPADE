@@ -1168,7 +1168,7 @@ mod_fgsea_server <- function(id, tables, run_fgsea) {
               wb <- createWorkbook()
               for (db_name in names(info$entries)) {
                 flat <- flatten_results(info$entries[[db_name]])
-                sheet_name <- substr(db_name, 1, 31)
+                sheet_name <- substr(gsub("[\\[\\]:*?/]", "_", db_name), 1, 31)
                 addWorksheet(wb, sheet_name)
                 writeData(wb, sheet_name, flat)
               }
