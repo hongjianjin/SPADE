@@ -119,11 +119,10 @@ mod_fgsea_ui <- function(id) {
           inputId = ns("rank_type"),
           label = "Ranking metric:",
           choices = c(
-            "log2FC × −log10(P-value)" = "log2FCxNegLog10Pval",
-            "log2FC" = "log2FC",
-            "t-statistic" = "t"
+            "t-statistic" = "t",
+            "sign(log2FC) × −log10(P-value)" = "sign.log2FCxNegLog10Pval"
           ),
-          selected = "log2FCxNegLog10Pval",
+          selected = "t",
           inline = TRUE
         ),
         tabBox(
@@ -1160,6 +1159,7 @@ mod_fgsea_server <- function(id, tables, run_fgsea) {
                   character(1)
                 )
               }
+              res
             }
 
             n_rnk <- length(by_rnk)

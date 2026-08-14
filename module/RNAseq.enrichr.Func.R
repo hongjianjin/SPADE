@@ -294,6 +294,40 @@ run_enrichr <- function(deg, selected_dbs,
     )
   }
 
+  # Consolidate UP and DOWN results into separate Excel workbooks
+  if (length(all_results) > 0) {
+    wb_up <- openxlsx::createWorkbook()
+    wb_down <- openxlsx::createWorkbook()
+    has_up <- FALSE
+    has_down <- FALSE
+    for (key in names(all_results)) {
+      entry <- all_results[[key]]
+      sheet <- substr(gsub("[^[:alnum:]_]", "_", entry$db_name), 1, 31)
+      if (!is.null(entry$up_result) && is.data.frame(entry$up_result) && nrow(entry$up_result) > 0) {
+        openxlsx::addWorksheet(wb_up, sheet)
+        openxlsx::writeData(wb_up, sheet, entry$up_result)
+        has_up <- TRUE
+      }
+      if (!is.null(entry$down_result) && is.data.frame(entry$down_result) && nrow(entry$down_result) > 0) {
+        openxlsx::addWorksheet(wb_down, sheet)
+        openxlsx::writeData(wb_down, sheet, entry$down_result)
+        has_down <- TRUE
+      }
+    }
+    if (has_up) {
+      tryCatch(openxlsx::saveWorkbook(wb_up,
+        file.path(out_dir, paste0(file_prefix, "_UP_enrichR.xlsx")),
+        overwrite = TRUE
+      ), error = function(e) NULL)
+    }
+    if (has_down) {
+      tryCatch(openxlsx::saveWorkbook(wb_down,
+        file.path(out_dir, paste0(file_prefix, "_DOWN_enrichR.xlsx")),
+        overwrite = TRUE
+      ), error = function(e) NULL)
+    }
+  }
+
   all_results
 }
 

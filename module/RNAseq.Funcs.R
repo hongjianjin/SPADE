@@ -864,10 +864,9 @@ GenerateRank4GSEA <- function(diff_table, annotation = NULL, prefix = NA) {
     genes <- rownames(diff_table)
   }
 
-  rnk1 <- data.frame(gene = genes, rank = round(negLog10pval * log2FC, 5))
-  rnk2 <- data.frame(gene = genes, rank = round(log2FC, 5))
+  rnk1 <- data.frame(gene = genes, rank = round(sign(log2FC) * negLog10pval, 5))
   rnk3 <- data.frame(gene = genes, rank = round(tStat, 5))
-  print(head(rnk1, n = 2))
+  print(head(rnk3, n = 2))
   #' Save Rnk File
   #'
   #' Executes SaveRnkFile.
@@ -905,13 +904,11 @@ GenerateRank4GSEA <- function(diff_table, annotation = NULL, prefix = NA) {
     write.table(rnk, outFile, sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
     return(TRUE)
   }
-  outFile1 <- paste0(prefix, "_log2FCxNegLog10Pval.rnk")
+  outFile1 <- paste0(prefix, "_sign.log2FCxNegLog10Pval.rnk")
   ok1 <- SaveRnkFile(rnk1, outFile1)
-  outFile2 <- paste0(prefix, "_log2FC.rnk")
-  ok2 <- SaveRnkFile(rnk2, outFile2)
   outFile3 <- paste0(prefix, "_t.rnk")
   ok3 <- SaveRnkFile(rnk3, outFile3)
-  return(all(c(ok1, ok2, ok3)))
+  return(all(c(ok1, ok3)))
 }
 
 #####################################################

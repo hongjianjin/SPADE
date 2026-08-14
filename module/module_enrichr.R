@@ -29,11 +29,10 @@ mod_enrichr_ui <- function(id) {
               ns("rank_metric"),
               label = "Ranking metric:",
               choices = c(
-                "log2FC \u00d7 \u2212log10(P-value)" = "log2FCxNegLog10Pval",
-                "log2FC" = "log2FC",
-                "t-statistic" = "t"
+                "t-statistic" = "t",
+                "sign(log2FC) \u00d7 \u2212log10(P-value)" = "sign.log2FCxNegLog10Pval"
               ),
-              selected = "log2FCxNegLog10Pval",
+              selected = "t",
               inline = TRUE
             ),
             radioButtons(
