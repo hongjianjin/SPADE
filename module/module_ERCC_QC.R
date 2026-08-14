@@ -125,18 +125,20 @@ ERCC_QCServer <- function(id, tables) {
       tagList(
         choiceBox,
         fluidRow(
-          box(
-            width = 6, title = "PCA \u2014 TMM Normalization (All Samples)",
-            solidHeader = TRUE, collapsible = TRUE, status = "primary",
-            shinycssloaders::withSpinner(
-              plotlyOutput(ns("erccPCAplot_tmm"), height = "500px", width = "500px")
-            )
-          ),
-          box(
-            width = 6, title = "PCA \u2014 ERCC Normalization (All Samples)",
-            solidHeader = TRUE, collapsible = TRUE, status = "primary",
-            shinycssloaders::withSpinner(
-              plotlyOutput(ns("erccPCAplot_ercc"), height = "500px", width = "500px")
+          tabBox(
+            width = 12, id = ns("pcaTabs"),
+            title = "Principal Component Analysis (PCA)",
+            tabPanel(
+              tags$b("TMM Normalization"),
+              div(shinycssloaders::withSpinner(
+                plotlyOutput(ns("erccPCAplot_tmm"), height = "500px", width = "500px")
+              ), align = "center")
+            ),
+            tabPanel(
+              tags$b("ERCC Normalization"),
+              div(shinycssloaders::withSpinner(
+                plotlyOutput(ns("erccPCAplot_ercc"), height = "500px", width = "500px")
+              ), align = "center")
             )
           )
         ),
