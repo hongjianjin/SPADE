@@ -340,7 +340,7 @@ fgsea_dotplot <- function(fgseaResTidy_top = NULL, pval_type = "logPval", plot_t
       return(fgsea_empty_plot(paste0("No ", tolower(direction), " pathways passed pvalue <0.05.")))
     }
     df <- df |>
-      dplyr::arrange(dplyr::if_else(.data$Direction == "Upregulated", -.data$NES, .data$NES)) |>
+      dplyr::arrange(.data$pval, dplyr::desc(.data$NES)) |>
       dplyr::mutate(pathway_label = factor(.data$pathway_label, levels = rev(unique(.data$pathway_label))))
 
     if (!"gene_count" %in% colnames(df)) {

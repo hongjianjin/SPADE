@@ -383,7 +383,7 @@ build_enrichr_plot_data <- function(df, N, pval_type = "logPval", keep_all = FAL
     stringr::str_wrap(substr(as.character(d$Term), 1, 100), width = 50),
     overlap_label
   )
-  d <- d[order(-d$Combined.Score, na.last = TRUE), , drop = FALSE]
+  d <- d[order(d$P.value, na.last = TRUE), , drop = FALSE]
   if (!isTRUE(keep_all)) {
     d <- head(d, N)
     d$term_label <- factor(d$term_label, levels = rev(unique(d$term_label)))
@@ -426,7 +426,7 @@ make_enrichr_bar_plot <- function(df, direction_label, pval_type = "logPval", fi
   p_label <- if (identical(pval_type, "logPadj")) "-log10(Adjusted P-value)" else "-log10(P-value)"
 
   df <- df |>
-    dplyr::arrange(dplyr::desc(.data$Combined.Score)) |>
+    dplyr::arrange(.data$P.value) |>
     dplyr::mutate(term_label = factor(.data$term_label, levels = rev(unique(.data$term_label))))
 
   if (direction_label == "Up") {
@@ -581,7 +581,7 @@ make_enrichr_dot_plot <- function(df, direction_label, pval_type = "logPval", co
   full_title <- paste0(direction_label, "regulated")
 
   df <- df |>
-    dplyr::arrange(dplyr::desc(.data$Combined.Score)) |>
+    dplyr::arrange(.data$P.value) |>
     dplyr::mutate(term_label = factor(.data$term_label, levels = rev(unique(.data$term_label))))
 
   if (direction_label == "Up") {
