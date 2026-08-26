@@ -1324,13 +1324,13 @@ mod_enrichr_server <- function(id, tables) {
         "bar" = tagList(
           "View ", tags$em("-log10Pval"), " or ", tags$em("-log10Padj"),
           " (", tags$strong("x axis"), "), and ", tags$em("Gene Ratio"),
-          " (", tags$strong("color gradient"), ") for top pathways"
+          " (", tags$strong("color gradient"), ") for top pathways (sorted by Pvalue)"
         ),
         "dot" = tagList(
           "View ", tags$em("-log10Pval"), " or ", tags$em("-log10Padj"),
           " (", tags$strong("x axis"), "), ", tags$em("Gene Ratio"),
           " (", tags$strong("color gradient"), "), and number of DEGs overlapping with pathway genes as Gene Count (",
-          tags$strong("dot size"), ") for top pathways"
+          tags$strong("dot size"), ") for top pathways (sorted by Pvalue)"
         )
       )
       tags$span(style = "font-size: 15px; color:navy; font-weight: 500", desc)

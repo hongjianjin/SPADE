@@ -1414,14 +1414,14 @@ mod_fgsea_server <- function(id, tables, run_fgsea) {
         "bar" = tagList(
           "View", tags$em("NES"), "or Normalized Enrichment Score (",
           tags$strong("x axis"), ") and ", tags$em("NES"), " (",
-          tags$strong("bar color"), ") for top pathways"
+          tags$strong("bar color"), ") for top pathways (sorted by NES)"
         ),
         "dot" = tagList(
           " View ", tags$em("GeneRatio"), " (",
           tags$strong("color gradient"), "), significance as ",
           tags$em("-log10Pval"), " or ", tags$em("-log10Padj"), " (", tags$strong("x axis"),
           ") and number of DEGs overlapping with pathway as Gene Count (",
-          tags$strong("dot size"), ") for top upregulated and downregulated pathways"
+          tags$strong("dot size"), ") for top upregulated and downregulated pathways (sorted by Pvalue)"
         )
       )
       tags$span(style = "font-size: 15px; color:navy; font-weight: 500", desc)
