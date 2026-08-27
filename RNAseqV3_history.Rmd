@@ -1,4 +1,4 @@
-**07/21/2026 version 3.0**
+**08/21/2026 version 3.0**
 
 1) Added fGSEA module to run fGSEA analysis using ranked DE gene list (.rnk file).
 2) Modularized code for easy update of existing feature and easy integration of additional features.
@@ -18,7 +18,7 @@
 17) Updated fGSEA and enrichR plots. Dotplots plot more than 2 data which can be error-prone in interactive version gerneated by plotly - converted them to static plots. Also restricted enrich db selection to 18 commonly used databases.
 18) Created optimal options for selecting DE genes for running enrichR  - ranking using one of the 3 ranking metric similar to fGSEA section, followed by option to choose top 100, 250 and 500 genes Upregulated and Downregulated DE genes each for running enrichR. 
 19) Added option to select topN genes (min 5, max 25, default 10) for plotting barplots and dotplots in enrichR module.
-20) Filter enrichment results by P.value<0.05 followed by ranking enrichment terms by NES (for fgsea) or combined score (for enrichR) to select topN terms (min 5, max 25, default 10) for plotting barplots and dotplots in both fgsea and enrichR modules. 
+20) Filter enrichment results by P.value<0.05 followed by ranking enrichment terms by NES (for fgsea barplot), or Pvalue (for fgsea dotplot and for enrichR barplots and dotplots) to select topN terms (min 5, max 25, default 10) for plotting barplots and dotplots in both fgsea and enrichR modules. 
 21) Added option to select species in the Input tab/module. This is additionally validated using geneId or gene symbol. 
 22) Added geneset db size information in the enrichment section
 
