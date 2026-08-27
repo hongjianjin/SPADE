@@ -69,16 +69,20 @@ filter_fgsea_results_by_pvalue <- function(fgsea_res_tab, pval_cutoff = 0.05) {
 
 #' Select Top Enriched Pathways by Direction
 #'
-#' Selects upregulated and downregulated pathways independently using NES only.
+#' Selects upregulated and downregulated pathways independently, ranked by
+#' either NES magnitude (top enriched) or nominal p-value (top significant).
 #' The input table is expected to already be filtered by nominal p-value before
 #' this plotting helper is called.
 #'
 #' @param fgsea_res_tab fGSEA result table containing `NES`, `pval`, `padj`,
 #'   `size`, and `pathway_size` columns.
 #' @param top_n Number of pathways to keep per direction.
+#' @param select_by Ranking criterion used to pick the top pathways per
+#'   direction: `"NES"` (default, largest magnitude first) or `"pval"`
+#'   (smallest p-value first).
 #'
 #' @return Data frame with pathway-level annotations used by plotting helpers.
-select_top_pathways <- function(fgsea_res_tab = NULL, top_n = 10) {
+select_top_pathways <- function(fgsea_res_tab = NULL, top_n = 10, select_by = "NES") {
   if (is.null(fgsea_res_tab)) {
     stop("No fGSEA result table provided to generate a plot.")
   }
@@ -86,6 +90,8 @@ select_top_pathways <- function(fgsea_res_tab = NULL, top_n = 10) {
   top_n <- suppressWarnings(as.integer(top_n))
   if (!is.finite(top_n) || is.na(top_n)) top_n <- 10L
   top_n <- max(1L, top_n)
+
+  select_by <- if (identical(select_by, "pval")) "pval" else "NES"
 
   fgseaResTidy <- fgsea_res_tab |>
     dplyr::mutate(
@@ -111,15 +117,16 @@ select_top_pathways <- function(fgsea_res_tab = NULL, top_n = 10) {
     ) |>
     dplyr::filter(is.finite(.data$NES), .data$NES != 0, !is.na(.data$Direction))
 
-  up_top <- fgseaResTidy |>
-    dplyr::filter(.data$Direction == "Upregulated") |>
-    dplyr::arrange(dplyr::desc(.data$NES)) |>
-    dplyr::slice_head(n = top_n)
+  up_pool <- fgseaResTidy |> dplyr::filter(.data$Direction == "Upregulated")
+  down_pool <- fgseaResTidy |> dplyr::filter(.data$Direction == "Downregulated")
 
-  down_top <- fgseaResTidy |>
-    dplyr::filter(.data$Direction == "Downregulated") |>
-    dplyr::arrange(.data$NES) |>
-    dplyr::slice_head(n = top_n)
+  if (select_by == "pval") {
+    up_top <- up_pool |> dplyr::arrange(.data$pval, dplyr::desc(.data$NES)) |> dplyr::slice_head(n = top_n)
+    down_top <- down_pool |> dplyr::arrange(.data$pval, .data$NES) |> dplyr::slice_head(n = top_n)
+  } else {
+    up_top <- up_pool |> dplyr::arrange(dplyr::desc(.data$NES)) |> dplyr::slice_head(n = top_n)
+    down_top <- down_pool |> dplyr::arrange(.data$NES) |> dplyr::slice_head(n = top_n)
+  }
 
   fgseaResTidy_top <- if (nrow(up_top) == 0 && nrow(down_top) == 0) {
     fgseaResTidy[0, , drop = FALSE]
@@ -526,7 +533,9 @@ fgsea_barplot <- function(fgseaResTidy_top = NULL, pval_type = "logPval", plot_t
 #' @param pval_col Column name reserved for p-values in external result tables.
 #' @param custom_gmt Optional path to a GMT file. When provided it is used
 #'   instead of `msigdbr` collections.
-#' @param top_n Number of positive and negative NES pathways to display.
+#' @param top_n Number of pathways to display per direction (up/down). Bar
+#'   and lollipop plots select the top N by NES magnitude; dot plots select
+#'   the top N by lowest nominal p-value.
 #' @param plot_type Plot style, one of `"bar"`, `"dot"`, or `"lollipop"`.
 #' @param pval_type Significance metric used by plot helpers: `"logPval"` or
 #'   `"logPadj"`.
@@ -611,8 +620,10 @@ run_fgsea <- function(ranks = NULL,
 
   fgseaResTidy <- filter_fgsea_results_by_pvalue(fgseaResTidy, pval_cutoff = pval_cutoff)
 
-  # Select top pathways to plot
-  fgseaResTidy_top <- select_top_pathways(fgsea_res_tab = fgseaResTidy, top_n = top_n)
+  # Select top pathways to plot: bar/lollipop rank by NES (top enriched),
+  # dot plot ranks by p-value (top significant)
+  select_by <- if (plot_type == "dot") "pval" else "NES"
+  fgseaResTidy_top <- select_top_pathways(fgsea_res_tab = fgseaResTidy, top_n = top_n, select_by = select_by)
 
   plot_title <- if (!is.null(sname) && nzchar(sname)) sname else ""
 
