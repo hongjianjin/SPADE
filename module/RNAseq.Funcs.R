@@ -852,7 +852,7 @@ GenerateRank4GSEA <- function(diff_table, annotation = NULL, prefix = NA) {
     return(FALSE)
   }
   pvals <- as.numeric(diff_table[, ind_P[1]])
-  pvals[!is.finite(pvals) | pvals <= 0] <- .Machine$double.xmin
+  pvals[is.finite(pvals) & pvals <= 0] <- .Machine$double.xmin
   negLog10pval <- -log10(pvals)
   log2FC <- as.numeric(diff_table[, ind_FC[1]])
   tStat <- as.numeric(diff_table[, ind_t[1]])
