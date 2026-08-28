@@ -1,33 +1,38 @@
-## CAB standard RNA-seq shiny App (Version 3)
+## SPADE: ERCC Spike-in Aware RNA-seq Differential Expression and Functional Enrichment Analysis
+
+<img src="www/SPADE_logo_small.png" alt="SPADE logo" width="180"/>
 
 ## Table of Contents
 - [Introduction](#introduction)
 - [Features](#features)
+- [Installation](#installation)
 - [Method](#method)
+  - [Data Preparation](#data-preparation)
+  - [QC evaluation](#qc-evaluation)
+  - [Principal component analysis (PCA) analysis](#principal-component-analysis-pca-analysis)
+  - [Relative log expression (RLE) plot](#relative-log-expression-rle-plot)
+  - [ERCC normalization](#ercc-normalization)
+  - [Differential expression analysis](#differential-expression-analysis)
+  - [Enrichment analysis](#enrichment-analysis)
 - [History](#history)
 - [Maintainers](#maintainers)
 - [Contact](#contact)
 - [Notes](#notes)
-
+  - [Development enviroment](#development-enviroment)
+  - [sessionInfo()](#sessioninfo)
 
 ## Introduction
-This interactive Shiny application is developed for bulk RNA-seq differential expression (DE) analysis using limma-voom method and visualizations including RLE, PCA, volcano plot ,Pairwise Average Gene Expression (AveExpr) Plot, heatmaps etc
+SPADE (Spike-in Powered Analysis of Differential Expression and Enrichment) is an interactive R Shiny application for coding-independent RNA-seq analysis. SPADE supports differential expression analysis using limma-voom, interactive data visualization, and downstream functional enrichment analysis within a unified web interface.
+
+Unlike most existing RNA-seq Shiny applications, SPADE incorporates ERCC spike-in controls for technical quality assessment and spike-in-based normalization. This enables users to directly compare results obtained using alternative normalization strategies, including TMM-based and ERCC-based workflows. By integrating established statistical methods with an accessible and reproducible analysis workflow, SPADE enables experimental researchers to perform comprehensive transcriptomic analyses without programming expertise.
 
 ## Features
-* QuickFile modules for merging count tables and validating meta data file
-* Generate PCA,RLE plot and library size plot before DE analysis for QC evaluation
-* Option to perform ERCC normalization (instead of TMM normalization) when ERCC counts are present.
-* Additional QC evaluation plots and tables are generated for ERCC workflow
-* Allow multiple DE runs from single set of inputs and download results individually.
-* Provide summary table by user defined cutoffs for DE genes.
-* Display DE table to view TopN_DEGs, All_DEGs (that pass cutoff_FDR), or all genes.
-* TopN_DEGs will be labeled in in AveExpr plot, Volcano plot, MAplot.
-* In Heatmap setting panel, user could directly use TopN DEGs or input a custom gene list.
-* Dynamically label user-input genes in AveExpr plot, Volcano plot, MAplot and Boxplot.
-* For ERCC workflow side-by-size TMM normalized and ERCC normalized data visualizations are rendered for comparison.
-* DE table (log2CPM_diff.tsv) is identical to the table from CAB standard RNA-seq analysis report pipeline.
-* Generate files for standard or pre-ranked GSEA analysis 
-* Option to perform enrichment analysis using DE table outputs - fGSEA submodule can be used to run pre-pranked Gene Set Enrichment Analysis (GSEA) while enrichR can be utilized for running for checking overrepresented pathways in top DE genes
+* Coding-independent RNA-seq differential expression analysis using limma-voom.
+* ERCC spike-in quality assessment and spike-in-based normalization.
+* Side-by-side comparison of TMM-normalized and ERCC-normalized analysis results.
+* Interactive QC and result visualizations, including PCA, RLE, volcano plots, average expression plots, boxplots, and heatmaps.
+* Functional enrichment analysis using fGSEA and EnrichR.
+* Reproducible output tables, plots, and downloadable analysis results.
 
 ## Installation
 Create a conda environment and activate it.

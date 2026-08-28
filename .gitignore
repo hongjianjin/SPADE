@@ -1,3 +1,6 @@
 .Rhistory
 .DS_Store
 data/log/
+# Keep packaged example data only; ignore generated analysis outputs under data/.
+data/*
+!data/*.txt

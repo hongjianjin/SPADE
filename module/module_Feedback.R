@@ -4,7 +4,7 @@ library(shinydashboardPlus)
 # =============================================================================
 # Feedback Module
 # UI:     FeedbackUI(id)
-# Server: FeedbackServer(id)   – currently static, no server logic needed
+# Server: FeedbackServer(id)   - currently static, no server logic needed
 # =============================================================================
 
 #' Feedback UI
@@ -25,15 +25,11 @@ FeedbackUI <- function(id) {
           image    = "Hongjian.Jin128x128.jpg"
         ),
         status = "primary",
+        width = 6,
         paste0(
-          "This App is developed and maintained by Dr. Hongjian Jin at the Center for ",
-          "Applied Bioinformatics (CAB), St Jude Children's Research Hospital (SJCRH). ",
-          "As a shared core facility, we keep expanding our available analyses, services ",
-          "and opportunities for collaborations. If you have any questions or suggestions, ",
-          "please feel free to contact CAB (CAB.HelpDesk@stjude.org) or the developer ",
-          "(Hongjian.Jin@stjude.org)."
-        ),
-        footer = HTML("<i>Finding cures. Saving children.</i>")
+          "Dr. Hongjian Jin developed the original RNA-seq differential expression Shiny app, ",
+          "RNAseqERCC report workflow, and EnrichR analysis module that formed the foundation of SPADE."
+        )
       ),
       userBox(
         title = userDescription(
@@ -43,15 +39,27 @@ FeedbackUI <- function(id) {
           image    = "Surbhi.Sona128x128.jpg"
         ),
         status = "primary",
+        width = 6,
         paste0(
-          "This App is maintained by Dr. Surbhi Sona at the Center for ",
-          "Applied Bioinformatics (CAB), St Jude Children's Research Hospital (SJCRH). ",
-          "As a shared core facility, we keep expanding our available analyses, services ",
-          "and opportunities for collaborations. If you have any questions or suggestions, ",
-          "please feel free to contact CAB (CAB.HelpDesk@stjude.org) or the current maintainer ",
-          "(Surbhi.Sona@stjude.org)."
-        ),
-        footer = HTML("<i>Finding cures. Saving children.</i>")
+          "Dr. Surbhi Sona integrated these components into SPADE, added fGSEA analysis, ",
+          "and led the platform rebranding and continued development."
+        )
+      )
+    ),
+    fluidRow(
+      box(
+        width = 12,
+        status = "primary",
+        solidHeader = FALSE,
+        collapsible = FALSE,
+        title = "Contact and Support",
+        HTML(paste0(
+          "SPADE is developed and maintained by the Center for Applied Bioinformatics ",
+          "(CAB) at St. Jude Children's Research Hospital. CAB provides bioinformatics ",
+          "analyses, services, and collaboration opportunities. For questions or ",
+          "suggestions, contact <b>CAB.HelpDesk@stjude.org</b>.",
+          "<br/><br/><i>Finding cures. Saving children.</i>"
+        ))
       )
     )
   )
@@ -66,6 +74,6 @@ FeedbackUI <- function(id) {
 #' @return Return value produced by FeedbackServer.
 FeedbackServer <- function(id) {
   moduleServer(id, function(input, output, session) {
-    # No reactive logic needed – purely static content
+    # No reactive logic needed - purely static content
   })
 }

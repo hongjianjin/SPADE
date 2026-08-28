@@ -86,12 +86,21 @@ ui <- shinydashboardPlus::dashboardPage(
   skin = "blue",
 
   header = shinydashboardPlus::dashboardHeader(
-    title = "RNAseq", titleWidth = 80
+    title = "SPADE",
+    titleWidth = 260,
+    leftUi = tagList(
+      tags$div(
+        style = "display: flex; align-items: center; height: 34px; max-width: calc(100vw - 360px); overflow: hidden; white-space: nowrap;",
+        tags$span(
+          "ERCC Spike-in Aware RNA-seq Differential Expression and Functional Enrichment Analysis",
+          style = "font-size: 20px; line-height: 34px; color: #ffffff; overflow: hidden; text-overflow: ellipsis;"
+        )
+      )
+    )
   ),
 
   sidebar = dashboardSidebar(
     sidebarMenu(id = "sidebar",
-      tags$head(tags$script(src = "getIP.js")),
       menuItem("Workflow",      tabName = "standard",  icon = icon("dna")),
       menuItem("QuickFile",     tabName = "quickfile", icon = icon("table-list")),
       menuItem("Documentation", tabName = "docs",      icon = icon("question")),
@@ -130,8 +139,7 @@ ui <- shinydashboardPlus::dashboardPage(
           column(12,
             tabBox(
               id = "tabset1",
-              title  = tagList(shiny::icon("dna"),
-                               "RNAseq Differential Expression Analysis [Ver 3.0]"),
+              title  = "Workflow",
               height = "650px", width = "400",
 
               tabPanel(id = "tabInput",   title = "Step1. Input",     value = "tab1",
