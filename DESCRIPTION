@@ -61,7 +61,7 @@ Depends:
        tibble,
        tidyverse,
        zip
-License: GPL-3
+License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: TRUE
 RoxygenNote: 6.1.1
