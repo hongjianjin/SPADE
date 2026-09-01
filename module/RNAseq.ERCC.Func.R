@@ -761,8 +761,8 @@ VizErccConc <- function(ERCC_counts, meta, outPrefix, ercc_control_file = NULL) 
   used2 <- reshape2::melt(used, id.vars = "id")
   if (is.null(ercc_control_file)) {
     candidates <- c(
-      "ERCC_Controls_Analysis.txt",
       file.path("data", "ERCC_Controls_Analysis.txt"),
+      "ERCC_Controls_Analysis.txt",
       file.path("extdata", "ERCC_Controls_Analysis.txt")
     )
     ercc_control_file <- candidates[file.exists(candidates)][1]
@@ -845,8 +845,8 @@ ErccQC <- function(counts_ERCC, meta, ercc_control_file = NULL) {
   # Locate ERCC controls file
   if (is.null(ercc_control_file)) {
     candidates <- c(
-      "ERCC_Controls_Analysis.txt",
       file.path("data", "ERCC_Controls_Analysis.txt"),
+      "ERCC_Controls_Analysis.txt",
       file.path("extdata", "ERCC_Controls_Analysis.txt")
     )
     ercc_control_file <- candidates[file.exists(candidates)][1]

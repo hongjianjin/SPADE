@@ -223,7 +223,7 @@ DocumentationUI <- function(id) {
             title = "New Features", closable = FALSE, width = NULL,
             status = "primary", solidHeader = TRUE, collapsible = TRUE,
             enable_dropdown = FALSE,
-            column(8, includeMarkdown("RNAseqV3_history.md"))
+            column(8, includeMarkdown("docs/RNAseqV3_history.md"))
           )
         )
       )
@@ -285,7 +285,7 @@ DocumentationServer <- function(id, projSpace,
     output$metaExample3 <- renderTable(metaExample3)
 
     output$infoQA <- renderUI({
-      includeMarkdown("RNAseqV3_faq.md")
+      includeMarkdown("docs/RNAseqV3_faq.md")
     })
   })
 }
