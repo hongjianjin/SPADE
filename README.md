@@ -32,7 +32,7 @@ Unlike most existing RNA-seq Shiny applications, SPADE incorporates ERCC spike-i
 * Side-by-side comparison of TMM-normalized and ERCC-normalized analysis results.
 * Interactive QC and result visualizations, including PCA, RLE, volcano plots, average expression plots, boxplots, and heatmaps.
 * Functional enrichment analysis using fGSEA and EnrichR.
-* Reproducible output tables, plots, and downloadable analysis results.
+* Reproducible output tables, plots, PCA coordinate files, QC metric tables, and downloadable analysis results.
 
 ## Installation
 Create a conda environment and activate it.
@@ -76,12 +76,13 @@ Alternative: run `Rscript install.R` to install missing CRAN and Bioconductor pa
 4. ERCC counts (if present), are automatically detected and user is notified. QC evaluation is imperative and non-optional in this case to allow user to switch back to TMM normalization mode in case ERCC failed.
 
 ### QC evaluation
-1. Library size, RLE and PCA plots are generated to evaluate sample-level quality check. 
-2. ERCC mode generates library size, PCA and spike-in level plots along with QC tables. At minimum, ERCC correlation threshold of 0.90 and coefficient of variation per group threshold of 15% is used to determine if ERCC passed essential QC considerations and can be reliably used for normalization. User may use QC plots and tables to make additional evaluation and proceed with ERCC normalization if ERCC passed all QC considerations.
+1. Library size, RLE and PCA plots are generated to evaluate sample-level quality check. QC outputs include plot files, summary metric tables, and PCA coordinate TSV files for downstream review.
+2. ERCC mode generates library size, PCA and spike-in level plots along with QC metric tables for per-sample ERCC statistics, group-level ERCC CV, and comparison-level spike-in shift when available. At minimum, ERCC correlation threshold of 0.90 and coefficient of variation per group threshold of 15% is used to determine if ERCC passed essential QC considerations and can be reliably used for normalization. User may use QC plots and tables to make additional evaluation and proceed with ERCC normalization if ERCC passed all QC considerations.
 
 ### Principal component analysis (PCA) analysis
 1. Normalize raw count to log2CPM, and select top 3000 features as input for PCA.
 2. It is possible to customize shapes adding a [BATCH] or [SHAPE] column to your metadata file(see 2.3 meta-data example file).
+3. Saved PCA outputs include coordinate TSV files with sample IDs, groups, PC scores, color/shape metadata when available, and percent variance for each PC.
 
 ### Relative log expression (RLE) plot
 We assume majority of the genes are not differentially expressed. In relative log expression(RLE) plot, unwanted variation both between and within batches are indicated by the varying position and size of the boxplots.

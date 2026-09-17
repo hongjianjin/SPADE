@@ -541,7 +541,9 @@ VisualizeServer <- function(id, tables, analyzeVals) {
         fig <- ggplotly(
           PCA2d(
             dat = dat, meta = meta,
-            scale = scale, topn = topn, outFile = outFile, label = label
+            scale = scale, topn = topn, outFile = outFile,
+            coordFile = paste0(tools::file_path_sans_ext(outFile), "_coordinates.tsv"),
+            label = label
           ),
           width = plotWidth, height = plotHeight, tooltip = "text"
         )

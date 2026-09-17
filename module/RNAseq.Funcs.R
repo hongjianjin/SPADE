@@ -424,6 +424,7 @@ ReadMeta <- function(metaFile, header = TRUE, sep = "\t", quote = "", fill = TRU
   if (!"COLOR" %in% colnames(meta)) {
     meta$COLOR <- allColors[as.integer(as.factor(meta$GROUP))]
   }
+
   if ("SHAPE" %in% colnames(meta)) {
     meta$SHAPE[meta$SHAPE == "" | is.na(meta$SHAPE)] <- "NA"
     if (length(unique(meta$SHAPE)) <= 5) {
@@ -1531,7 +1532,8 @@ saveStandardQcBundle <- function(counts, logCPM, meta, outPrefix) {
     {
       PCA2d(
         dat = logCPM, meta = meta, scale = TRUE, topn = 3000,
-        outFile = paste0(qcPrefix, "_QC_PCA_TMM.pdf"), label = FALSE
+        outFile = paste0(qcPrefix, "_QC_PCA_TMM.pdf"),
+        coordFile = paste0(qcPrefix, "_QC_PCA_TMM_coordinates.tsv"), label = FALSE
       )
     },
     error = function(e) {
@@ -1670,7 +1672,8 @@ saveErccQcBundle <- function(stat, cv = NULL, shift = NULL,
       {
         PCA2d(
           dat = tmmLogCPM, meta = meta, scale = TRUE, topn = 3000,
-          outFile = paste0(qcPrefix, "_ERCC_QC_PCA_TMM.pdf"), label = FALSE
+          outFile = paste0(qcPrefix, "_ERCC_QC_PCA_TMM.pdf"),
+          coordFile = paste0(qcPrefix, "_ERCC_QC_PCA_TMM_coordinates.tsv"), label = FALSE
         )
       },
       error = function(e) {
@@ -1683,7 +1686,8 @@ saveErccQcBundle <- function(stat, cv = NULL, shift = NULL,
       {
         PCA2d(
           dat = erccLogCPM, meta = meta, scale = TRUE, topn = 3000,
-          outFile = paste0(qcPrefix, "_ERCC_QC_PCA_ERCC.pdf"), label = FALSE
+          outFile = paste0(qcPrefix, "_ERCC_QC_PCA_ERCC.pdf"),
+          coordFile = paste0(qcPrefix, "_ERCC_QC_PCA_ERCC_coordinates.tsv"), label = FALSE
         )
       },
       error = function(e) {
@@ -2773,12 +2777,13 @@ DataTransform <- function(count, meta = NULL, norm.method = "log2CPM", total_cou
 #' @param scale Logical flag passed to `prcomp`.
 #' @param topn Number of most variable features to use.
 #' @param outFile Optional path to save the figure.
+#' @param coordFile Optional path to save PCA sample coordinates.
 #' @param label Logical flag to label sample points.
 #' @param title Optional custom title.
 #' @param varMethod Placeholder for variability method selection.
 #'
 #' @return `ggplot` object.
-PlotPCA <- function(df, meta, scale = T, topn = 3000, outFile = NA, label = F, title = NA, varMethod = "mad") {
+PlotPCA <- function(df, meta, scale = T, topn = 3000, outFile = NA, coordFile = NA, label = F, title = NA, varMethod = "mad") {
   cat("\n[PlotPCA]: scale=", scale, "; topn=", topn, "; method=", varMethod, "\n")
 
   # rownames(diff) <- diff_table$gene
@@ -2878,6 +2883,11 @@ PlotPCA <- function(df, meta, scale = T, topn = 3000, outFile = NA, label = F, t
   }
 
   if ("SHAPE" %in% colnames(meta)) {
+    if (!"SYMBOL" %in% colnames(meta)) {
+      shape_levels <- unique(meta$SHAPE)
+      shape_values <- if (length(shape_levels) <= 5) c(21, 23, 24, 22, 25) else c(19, 17, 15, 18, 16, 14:0)
+      meta$SYMBOL <- shape_values[as.integer(as.factor(meta$SHAPE))]
+    }
     DF <- cbind(DF, SHAPE = meta$SHAPE, SYMBOL = meta$SYMBOL)
     # DF$SHAPE[DF$SHAPE=="" | is.na(DF$SHAPE) ] <- "NA"
     if (length(unique(DF$SHAPE)) <= 5) {
@@ -2897,6 +2907,23 @@ PlotPCA <- function(df, meta, scale = T, topn = 3000, outFile = NA, label = F, t
     uniqCombs$comb <- paste(DF$COLOR, DF$GROUP, sep = "_")
     uniqCombs <- uniqCombs[!duplicated(uniqCombs$comb), c("COLOR", "GROUP")]
   }
+  if (!is.null(coordFile) && length(coordFile) > 0 && !is.na(coordFile) && nzchar(coordFile)) {
+    pc_cols <- grep("^PC[0-9]+$", colnames(DF), value = TRUE)
+    coord_cols <- unique(c("ID", "GROUP", pc_cols, "COLOR", "SHAPE", "SYMBOL"))
+    coord_cols <- coord_cols[coord_cols %in% colnames(DF)]
+    coordDF <- DF[, coord_cols, drop = FALSE]
+    for (pc in pc_cols) {
+      idx <- as.integer(sub("^PC", "", pc))
+      coordDF[[paste0(pc, "_percent_variance")]] <- pctVar[idx]
+    }
+    dir.create(dirname(coordFile), recursive = TRUE, showWarnings = FALSE)
+    write.table(coordDF,
+      file = coordFile, sep = "\t", quote = FALSE,
+      row.names = FALSE, col.names = TRUE
+    )
+    cat("\n\t", basename(coordFile), "[saved]")
+  }
+
   GROUPS <- factor(DF$GROUP, levels = unique(DF$GROUP))
   # mutliple groups may share same shape
   if ("SHAPE" %in% colnames(DF)) {
@@ -3003,10 +3030,11 @@ PlotPCA <- function(df, meta, scale = T, topn = 3000, outFile = NA, label = F, t
 #' @param scale Logical flag passed to PCA.
 #' @param topn Number of most variable features to use.
 #' @param outFile Optional path to save the figure.
+#' @param coordFile Optional path to save PCA sample coordinates.
 #' @param label Logical flag to label points.
 #'
 #' @return `ggplot` object.
-PCA2d <- function(dat, meta = NULL, dataType = "RNAseq", scale = T, topn = 3000, outFile = NA, label = F) {
+PCA2d <- function(dat, meta = NULL, dataType = "RNAseq", scale = T, topn = 3000, outFile = NA, coordFile = NA, label = F) {
   # meta <- tables$meta_used
   # dat <- tables$counts
   # dat_total <- tables$counts_total
@@ -3040,7 +3068,7 @@ PCA2d <- function(dat, meta = NULL, dataType = "RNAseq", scale = T, topn = 3000,
 
   varMethod <- "mad"
 
-  pcaPlot <- PlotPCA(used, meta, scale = scale, topn = topn, outFile = outFile, label = label, varMethod = varMethod)
+  pcaPlot <- PlotPCA(used, meta, scale = scale, topn = topn, outFile = outFile, coordFile = coordFile, label = label, varMethod = varMethod)
   return(pcaPlot)
 }
 
